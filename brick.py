@@ -1,20 +1,34 @@
 # 플레이어가 깨야 하는 벽돌
 
 import pygame
-
+import random
 
 BLUE = (0, 0, 255)
-
+WHITE = (255, 255, 255)
 
 class Brick:
     # 위치(x, y 좌표)
     def __init__(self, x, y):
         self.rect = pygame.Rect(x, y, 60, 20)
-        self.hidden = False
-
+        self.durability = random.randint(1, 5)
+        self.font = pygame.font.Font(None, 18)
+        self.text_surface = self.font.render(str(self.durability), True, WHITE)
+        self.text_rect = self.text_surface.get_rect(center=self.rect.center)
 
     # 내구도 (깨지기 전 후 상태)
     # 벽돌 파괴 관련 메서드
+    def hit(self):
+        self.durability -= 1
+        if self.durability <= 0:
+            return True
+        else:
+            self.update_text()
+            return False
+    
+    def update_text(self):
+        self.text_surface = self.font.render(str(self.durability), True, WHITE)
+
     def draw(self, screen):
-        if not self.hidden:
+        if self.durability > 0:
             pygame.draw.rect(screen, BLUE, self.rect)
+            screen.blit(self.text_surface, self.text_rect)

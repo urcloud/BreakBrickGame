@@ -11,10 +11,11 @@ def detect_collision(ball, paddle, bricks):
 
     # 공이 벽돌과 충돌하는지 확인
     for brick in bricks:
-        if not brick.hidden and ball.rect.colliderect(brick.rect):
-            brick.hidden = True
+        if brick.durability > 0 and ball.rect.colliderect(brick.rect):
+            if brick.hit():
+                bricks.remove(brick)
             ball.speed_y *= -1
             return True
-
+        
 
     return False
