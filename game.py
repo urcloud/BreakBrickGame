@@ -7,6 +7,7 @@
 
 
 import pygame
+import time
 from ball import Ball
 from brick import Brick
 from paddle import Paddle
@@ -27,12 +28,22 @@ class Game:
 
 
     def run(self):
+        self.countdown()
+        
         while self.running:
             self.handle_events()
             self.update()
             self.draw()
             self.clock.tick(60)
         self.show_game_over_screen()
+
+
+    def countdown(self):
+        for i in range(3, 0, -1):
+            self.screen.fill(BLACK)
+            self.screen.draw_text(f"Game starts in {i}...", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.screen.update()
+            time.sleep(1)
 
 
     def handle_events(self):
@@ -48,10 +59,8 @@ class Game:
         if detect_collision(self.ball, self.paddle, self.bricks):
             self.score += 10
 
-
         if self.ball.rect.bottom >= SCREEN_HEIGHT:
             self.running = False
-
 
         if not self.bricks:
             self.running = False
