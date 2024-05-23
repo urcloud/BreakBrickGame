@@ -10,6 +10,6 @@ def detect_collision(ball, paddle, bricks):
         if brick.durability > 0 and ball.rect.colliderect(brick.rect):
             if brick.hit():
                 bricks.remove(brick)
-                return True
             ball.speed_y *= -1
+            return True
     return False
