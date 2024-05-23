@@ -5,7 +5,6 @@
 # 게임 시작, 일시정지, 재시작, 종료 관련 메서드
 # 점수 업데이트, 플레이어 목숨 감소 등 상태변화 관련 메서드
 
-
 import pygame
 import time
 from ball import Ball
@@ -13,7 +12,6 @@ from brick import Brick
 from paddle import Paddle
 from screen import Screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK
 from collision import detect_collision
-
 
 class Game:
     def __init__(self):
@@ -26,17 +24,14 @@ class Game:
         self.running = True
         self.score = 0
 
-
     def run(self):
         self.countdown()
-        
         while self.running:
             self.handle_events()
             self.update()
             self.draw()
             self.clock.tick(60)
         self.show_game_over_screen()
-
 
     def countdown(self):
         for i in range(3, 0, -1):
@@ -45,12 +40,10 @@ class Game:
             self.screen.update()
             time.sleep(1)
 
-
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -65,13 +58,11 @@ class Game:
         if not self.bricks:
             self.running = False
 
-
     def draw(self):
         self.screen.fill(BLACK)
         self.screen.draw(self.paddle, self.ball, *self.bricks)
         self.screen.draw_text(f"Score: {self.score}", (10, 10))
         self.screen.update()
-
 
     def show_game_over_screen(self):
         self.screen.fill(BLACK)
@@ -86,7 +77,6 @@ class Game:
         self.screen.draw_text("Press R to play again or Q to quit", (SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50))
         pygame.display.flip()
         self.wait_for_key()
-
 
     def wait_for_key(self):
         waiting = True
@@ -103,7 +93,6 @@ class Game:
                     elif event.key == pygame.K_q:
                         waiting = False
                         self.running = False
-
 
     def restart_game(self):
         self.ball = Ball()
