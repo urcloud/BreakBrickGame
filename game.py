@@ -22,6 +22,7 @@ class Game:
         self.paddle = Paddle()
         self.bricks = [Brick(col * (60 + 10) + 35, row * (20 + 10) + 35) for row in range(5) for col in range(10)]
         self.running = True
+        self.paused = False
         self.score = 0
 
     def run(self):
@@ -44,24 +45,30 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.paused = not self.paused
 
     def update(self):
-        keys = pygame.key.get_pressed()
-        self.paddle.move(keys)
-        self.ball.move()
-        if detect_collision(self.ball, self.paddle, self.bricks):
-            self.score += 10
+        if not self.paused:
+            keys = pygame.key.get_pressed()
+            self.paddle.move(keys)
+            self.ball.move()
+            if detect_collision(self.ball, self.paddle, self.bricks):
+                self.score += 10
 
-        if self.ball.rect.bottom >= SCREEN_HEIGHT:
-            self.running = False
+            if self.ball.rect.bottom >= SCREEN_HEIGHT:
+                self.running = False
 
-        if not self.bricks:
-            self.running = False
+            if not self.bricks:
+                self.running = False
 
     def draw(self):
         self.screen.fill(BLACK)
         self.screen.draw(self.paddle, self.ball, *self.bricks)
         self.screen.draw_text(f"Score: {self.score}", (10, 10))
+        if self.paused:
+            self.screen.draw_text("Paused", (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2))
         self.screen.update()
 
     def show_game_over_screen(self):
