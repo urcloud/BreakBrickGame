@@ -79,7 +79,13 @@ class Game:
                 self.paddle.shorten() 
                 self.initialize_bricks() 
                 self.reset_ball_and_paddle() 
-                self.countdown() 
+                self.wait_for_level_up()
+                
+    def wait_for_level_up(self):
+        self.screen.fill(BLACK)
+        self.screen.draw_text("Level Up!", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        self.screen.update()
+        pygame.time.wait(1000)
 
     def draw(self):
         self.screen.fill(BLACK)
