@@ -156,8 +156,8 @@ class Game:
         self.screen.screen.blit(player_text, player_rect)
         self.screen.draw_text("Press R to play again or Q to quit", (SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50))
         pygame.display.flip()
-        self.wait_for_key()
         self.save_user_data()
+        self.wait_for_key()
 
     def wait_for_key(self):
         waiting = True

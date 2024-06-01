@@ -1,3 +1,9 @@
-# 관리자 역할
-# 게임이 끝날 때 플레이어의 점수를 데이터베이스에 저장
-# 최고 점수 목록을 관리 및 조회
+import sqlite3
+
+def get_top_scores():
+    conn = sqlite3.connect('game_data.db')
+    c = conn.cursor()
+    c.execute("SELECT name, score FROM users ORDER BY score DESC LIMIT 3")
+    top_scores = c.fetchall()
+    conn.close()
+    return top_scores
