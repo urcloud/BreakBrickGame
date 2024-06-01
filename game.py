@@ -24,10 +24,31 @@ class Game:
         self.paddle = Paddle()
         self.bricks = []
         self.initialize_bricks()
-        self.running = True
+        self.running = False
         self.paused = False
         self.score = 0
         self.lives = 3
+        self.player_name = None
+        
+    def get_player_name(self):
+        name = ""
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        return name
+                    elif event.key == pygame.K_BACKSPACE:
+                        name = name[:-1]
+                    else:
+                        name += event.unicode
+            self.screen.fill(BLACK)
+            self.screen.draw_text("Enter your name:", (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
+            self.screen.draw_text(name, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            pygame.display.flip()
+            self.clock.tick(30)
 
     def initialize_bricks(self):
         brick_count = self.level 
@@ -40,6 +61,8 @@ class Game:
 
 
     def run(self):
+        self.player_name = self.get_player_name()
+        self.running = True
         self.countdown()
         while self.running:
             self.handle_events()
@@ -98,6 +121,8 @@ class Game:
         self.screen.draw_text(f"Score: {self.score}", (150, 10))
         self.screen.draw_text(f"Level: {self.level}", (10, 10))
         self.screen.draw_text(f"Lives: {self.lives}", (SCREEN_WIDTH - 150, 10))
+        if self.running:
+            self.screen.draw_text(f"Player: {self.player_name}", (10, SCREEN_HEIGHT - 30))
         if self.paused:
             self.screen.draw_text("Paused", (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2))
         self.screen.update()
@@ -108,10 +133,13 @@ class Game:
         score_font = pygame.font.Font(None, 36)
         game_over_text = game_over_font.render("Game Over", True, (255, 255, 255))
         score_text = score_font.render(f"Score: {self.score}", True, (255, 255, 255))
+        player_text = score_font.render(f"Player: {self.player_name}", True, (255, 255, 255))
         game_over_rect = game_over_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
-        score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 30))
+        player_rect = player_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         self.screen.screen.blit(game_over_text, game_over_rect)
         self.screen.screen.blit(score_text, score_rect)
+        self.screen.screen.blit(player_text, player_rect)
         self.screen.draw_text("Press R to play again or Q to quit", (SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50))
         pygame.display.flip()
         self.wait_for_key()
