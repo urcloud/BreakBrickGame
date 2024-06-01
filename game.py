@@ -18,12 +18,23 @@ class Game:
         pygame.init()
         self.screen = Screen()
         self.clock = pygame.time.Clock()
+        self.level = 1
         self.ball = Ball()
         self.paddle = Paddle()
-        self.bricks = [Brick(col * (60 + 10) + 35, row * (20 + 10) + 35) for row in range(5) for col in range(10)]
+        self.bricks = []
+        self.initialize_bricks()
         self.running = True
         self.paused = False
         self.score = 0
+
+    def initialize_bricks(self):
+        brick_count = 5 + (self.level - 1) * 5
+        self.bricks = [Brick(col * (60 + 10) + 35, row * (20 + 10) + 35) for row in range((brick_count + 9) // 10) for col in range(10)]
+        self.bricks = self.bricks[:brick_count]  # Limit to the number of bricks for the current level
+
+    def reset_ball_and_paddle(self):
+        self.ball = Ball()
+        self.paddle = Paddle()
 
     def run(self):
         self.countdown()
@@ -61,12 +72,16 @@ class Game:
                 self.running = False
 
             if not self.bricks:
-                self.running = False
+                self.level += 1
+                self.initialize_bricks()
+                self.reset_ball_and_paddle()
+                self.countdown()
 
     def draw(self):
         self.screen.fill(BLACK)
         self.screen.draw(self.paddle, self.ball, *self.bricks)
         self.screen.draw_text(f"Score: {self.score}", (10, 10))
+        self.screen.draw_text(f"Level: {self.level}", (SCREEN_WIDTH - 150, 10))
         if self.paused:
             self.screen.draw_text("Paused", (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2))
         self.screen.update()
@@ -102,8 +117,8 @@ class Game:
                         self.running = False
 
     def restart_game(self):
-        self.ball = Ball()
-        self.paddle = Paddle()
-        self.bricks = [Brick(col * (60 + 10) + 35, row * (20 + 10) + 35) for row in range(5) for col in range(10)]
+        self.level = 1
         self.score = 0
         self.running = True
+        self.initialize_bricks()
+        self.reset_ball_and_paddle()
