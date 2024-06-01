@@ -1,13 +1,7 @@
-# 게임상태 (진행중, 일시정지, 종료)
-# 플레이어 정보 (점수, 목숨)
-
-
-# 게임 시작, 일시정지, 재시작, 종료 관련 메서드
-# 점수 업데이트, 플레이어 목숨 감소 등 상태변화 관련 메서드
-
 import pygame
 import time
 import random
+import sqlite3
 from ball import Ball
 from brick import Brick
 from paddle import Paddle
@@ -29,6 +23,26 @@ class Game:
         self.score = 0
         self.lives = 3
         self.player_name = None
+        self.conn = sqlite3.connect('game_data.db')
+        self.c = self.conn.cursor()
+        self.create_table()
+        
+    def create_table(self):
+        self.c.execute('''CREATE TABLE IF NOT EXISTS users (
+                         id INTEGER PRIMARY KEY AUTOINCREMENT,
+                         name TEXT NOT NULL,
+                         score INTEGER NOT NULL,
+                         level INTEGER NOT NULL
+                         )''')
+        self.conn.commit()
+        
+    def save_user_data(self):
+        self.c.execute("INSERT INTO users (name, score, level) VALUES (?, ?, ?)",
+                       (self.player_name, self.score, self.level))
+        self.conn.commit()
+        
+    def __del__(self):
+        self.conn.close()
         
     def get_player_name(self):
         name = ""
@@ -143,6 +157,7 @@ class Game:
         self.screen.draw_text("Press R to play again or Q to quit", (SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50))
         pygame.display.flip()
         self.wait_for_key()
+        self.save_user_data()
 
     def wait_for_key(self):
         waiting = True
