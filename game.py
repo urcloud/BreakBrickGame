@@ -7,6 +7,7 @@
 
 import pygame
 import time
+import random
 from ball import Ball
 from brick import Brick
 from paddle import Paddle
@@ -28,10 +29,10 @@ class Game:
         self.score = 0
 
     def initialize_bricks(self):
-        brick_count = 5 + (self.level - 1) * 5 
-        self.bricks = [Brick(col * (60 + 10) + 35, row * (20 + 10) + 35) for row in range((brick_count + 9) // 10) for col in range(10)]
-        self.bricks = self.bricks[:brick_count]
-
+        brick_count = self.level 
+        brick_positions = [(random.randint(0, 9) * (60 + 10) + 35, random.randint(0, 9) * (20 + 10) + 35) for _ in range(brick_count)]
+        self.bricks = [Brick(x, y, self.level) for x, y in brick_positions]
+    
     def reset_ball_and_paddle(self):
         self.ball = Ball(self.ball.speed_x, self.ball.speed_y) 
         self.paddle = Paddle(self.paddle.rect.width) 

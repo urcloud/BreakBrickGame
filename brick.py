@@ -8,9 +8,9 @@ WHITE = (255, 255, 255)
 
 class Brick:
     # 위치(x, y 좌표)
-    def __init__(self, x, y):
+    def __init__(self, x, y, level):
         self.rect = pygame.Rect(x, y, 60, 20)
-        self.durability = random.randint(1, 5)
+        self.durability = level
         self.font = pygame.font.Font(None, 18)
         self.text_surface = self.font.render(str(self.durability), True, WHITE)
         self.text_rect = self.text_surface.get_rect(center=self.rect.center)
