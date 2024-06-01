@@ -28,13 +28,14 @@ class Game:
         self.score = 0
 
     def initialize_bricks(self):
-        brick_count = 5 + (self.level - 1) * 5
+        brick_count = 5 + (self.level - 1) * 5 
         self.bricks = [Brick(col * (60 + 10) + 35, row * (20 + 10) + 35) for row in range((brick_count + 9) // 10) for col in range(10)]
-        self.bricks = self.bricks[:brick_count]  # Limit to the number of bricks for the current level
+        self.bricks = self.bricks[:brick_count]
 
     def reset_ball_and_paddle(self):
-        self.ball = Ball()
-        self.paddle = Paddle()
+        self.ball = Ball(self.ball.speed_x, self.ball.speed_y) 
+        self.paddle = Paddle(self.paddle.rect.width) 
+
 
     def run(self):
         self.countdown()
@@ -72,16 +73,18 @@ class Game:
                 self.running = False
 
             if not self.bricks:
-                self.level += 1
-                self.initialize_bricks()
-                self.reset_ball_and_paddle()
-                self.countdown()
+                self.level += 1  
+                self.ball.increase_speed()  
+                self.paddle.shorten() 
+                self.initialize_bricks() 
+                self.reset_ball_and_paddle() 
+                self.countdown() 
 
     def draw(self):
         self.screen.fill(BLACK)
         self.screen.draw(self.paddle, self.ball, *self.bricks)
         self.screen.draw_text(f"Score: {self.score}", (10, 10))
-        self.screen.draw_text(f"Level: {self.level}", (SCREEN_WIDTH - 150, 10))
+        self.screen.draw_text(f"Level: {self.level}", (SCREEN_WIDTH - 150, 10))  # 레벨을 표시합니다.
         if self.paused:
             self.screen.draw_text("Paused", (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2))
         self.screen.update()
@@ -116,9 +119,10 @@ class Game:
                         waiting = False
                         self.running = False
 
+
     def restart_game(self):
-        self.level = 1
-        self.score = 0
+        self.level = 1 
+        self.score = 0  
         self.running = True
-        self.initialize_bricks()
-        self.reset_ball_and_paddle()
+        self.initialize_bricks() 
+        self.reset_ball_and_paddle() 
