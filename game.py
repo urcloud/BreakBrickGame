@@ -27,6 +27,7 @@ class Game:
         self.running = True
         self.paused = False
         self.score = 0
+        self.lives = 3
 
     def initialize_bricks(self):
         brick_count = self.level 
@@ -71,7 +72,11 @@ class Game:
                 self.score += 10
 
             if self.ball.rect.bottom >= SCREEN_HEIGHT:
-                self.running = False
+                self.lives -= 1
+                if self.lives > 0:
+                    self.reset_ball_and_paddle()
+                else:
+                    self.running = False
 
             if not self.bricks:
                 self.level += 1  
@@ -90,8 +95,9 @@ class Game:
     def draw(self):
         self.screen.fill(BLACK)
         self.screen.draw(self.paddle, self.ball, *self.bricks)
-        self.screen.draw_text(f"Score: {self.score}", (10, 10))
-        self.screen.draw_text(f"Level: {self.level}", (SCREEN_WIDTH - 150, 10))  # 레벨을 표시합니다.
+        self.screen.draw_text(f"Score: {self.score}", (150, 10))
+        self.screen.draw_text(f"Level: {self.level}", (10, 10))
+        self.screen.draw_text(f"Lives: {self.lives}", (SCREEN_WIDTH - 150, 10))
         if self.paused:
             self.screen.draw_text("Paused", (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2))
         self.screen.update()
