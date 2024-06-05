@@ -30,8 +30,8 @@ class MainMenu:
                     elif self.is_button_clicked(mouse_pos, 400, 300):
                         return "start_game"
 
-    def draw_text(self, text, x, y):
-        text_surface = self.font.render(text, True, (0, 0, 0))
+    def draw_text(self, text, x, y, color=(0, 0, 0)):
+        text_surface = self.font.render(text, True, color)
         text_rect = text_surface.get_rect(center=(x, y))
         self.screen.blit(text_surface, text_rect)
 
@@ -48,10 +48,13 @@ class MainMenu:
         top_scores = get_top_scores()
         self.screen.fill((255, 255, 255))
         self.draw_text("Highest Scores", 400, 50)
-        y = 150
-        for i, (name, score) in enumerate(top_scores, 1):
-            self.draw_text(f"{i}. {name}: {score}", 400, y)
-            y += 50
+        if not top_scores:
+            self.draw_text("Player data does not exist", 400, 150, color=(255, 0, 0))
+        else:
+            y = 150
+            for i, (name, score) in enumerate(top_scores, 1):
+                self.draw_text(f"{i}. {name}: {score}", 400, y)
+                y += 50
         self.draw_button("Main Menu", 400, 500)
         pygame.display.flip()
         while True:

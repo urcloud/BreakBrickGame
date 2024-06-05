@@ -27,5 +27,5 @@ def get_top_scores():
     top_scores = c.fetchall()
     conn.close()
     if not top_scores:
-        return[("플레이어 데이터가 존재하지 않습니다.", 0)]
+        return []
     return top_scores
