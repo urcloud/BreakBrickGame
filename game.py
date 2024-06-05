@@ -1,11 +1,11 @@
 import pygame
 import time
-import random
 from ball import Ball
-from brick import Brick
 from paddle import Paddle
+from brick import Brick
 from screen import Screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK
 from collision import detect_collision
+from level import Level
 import admin
 
 class Game:
@@ -13,11 +13,9 @@ class Game:
         pygame.init()
         self.screen = Screen()
         self.clock = pygame.time.Clock()
-        self.level = 1
+        self.level = Level()
         self.ball = Ball()
         self.paddle = Paddle()
-        self.bricks = []
-        self.initialize_bricks()
         self.running = False
         self.paused = False
         self.score = 0
@@ -45,11 +43,6 @@ class Game:
             pygame.display.flip()
             self.clock.tick(30)
 
-    def initialize_bricks(self):
-        brick_count = self.level 
-        brick_positions = [(random.randint(0, 9) * (60 + 10) + 35, random.randint(0, 9) * (20 + 10) + 35) for _ in range(brick_count)]
-        self.bricks = [Brick(x, y, self.level) for x, y in brick_positions]
-    
     def reset_ball_and_paddle(self):
         self.ball = Ball(self.ball.speed_x, self.ball.speed_y) 
         self.paddle = Paddle(self.paddle.rect.width) 
@@ -85,7 +78,7 @@ class Game:
             keys = pygame.key.get_pressed()
             self.paddle.move(keys)
             self.ball.move()
-            if detect_collision(self.ball, self.paddle, self.bricks):
+            if detect_collision(self.ball, self.paddle, self.level.bricks):
                 self.score += 10
 
             if self.ball.rect.bottom >= SCREEN_HEIGHT:
@@ -95,11 +88,8 @@ class Game:
                 else:
                     self.running = False
 
-            if not self.bricks:
-                self.level += 1  
-                self.ball.increase_speed()  
-                self.paddle.shorten() 
-                self.initialize_bricks() 
+            if not self.level.bricks:
+                self.level.level_up(self.ball, self.paddle) 
                 self.reset_ball_and_paddle() 
                 self.wait_for_level_up()
                 
@@ -111,9 +101,9 @@ class Game:
 
     def draw(self):
         self.screen.fill(BLACK)
-        self.screen.draw(self.paddle, self.ball, *self.bricks)
+        self.screen.draw(self.paddle, self.ball, *self.level.bricks)
         self.screen.draw_text(f"Score: {self.score}", (150, 10))
-        self.screen.draw_text(f"Level: {self.level}", (10, 10))
+        self.screen.draw_text(f"Level: {self.level.level}", (10, 10))
         self.screen.draw_text(f"Lives: {self.lives}", (SCREEN_WIDTH - 150, 10))
         if self.running:
             self.screen.draw_text(f"Player: {self.player_name}", (10, SCREEN_HEIGHT - 30))
@@ -136,7 +126,7 @@ class Game:
         self.screen.screen.blit(player_text, player_rect)
         self.screen.draw_text("Press R to play again or Q to quit", (SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50))
         pygame.display.flip()
-        admin.save_user_data(self.player_name, self.score, self.level)  # 사용자 데이터 저장
+        admin.save_user_data(self.player_name, self.score, self.level.level)
         self.wait_for_key()
 
     def wait_for_key(self):
@@ -156,8 +146,8 @@ class Game:
                         self.running = False
 
     def restart_game(self):
-        self.level = 1 
+        self.level = Level()
         self.score = 0  
         self.running = True
-        self.initialize_bricks() 
+        self.level.bricks = Brick.initialize_bricks(self.level.level)  # 벽돌 초기화
         self.reset_ball_and_paddle() 
