@@ -1,12 +1,12 @@
 import pygame
 import time
 import random
-import sqlite3
 from ball import Ball
 from brick import Brick
 from paddle import Paddle
 from screen import Screen, SCREEN_WIDTH, SCREEN_HEIGHT, BLACK
 from collision import detect_collision
+import admin
 
 class Game:
     def __init__(self):
@@ -23,27 +23,8 @@ class Game:
         self.score = 0
         self.lives = 3
         self.player_name = None
-        self.conn = sqlite3.connect('game_data.db')
-        self.c = self.conn.cursor()
-        self.create_table()
-        
-    def create_table(self):
-        self.c.execute('''CREATE TABLE IF NOT EXISTS users (
-                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                         name TEXT NOT NULL,
-                         score INTEGER NOT NULL,
-                         level INTEGER NOT NULL
-                         )''')
-        self.conn.commit()
-        
-    def save_user_data(self):
-        self.c.execute("INSERT INTO users (name, score, level) VALUES (?, ?, ?)",
-                       (self.player_name, self.score, self.level))
-        self.conn.commit()
-        
-    def __del__(self):
-        self.conn.close()
-        
+        admin.create_table()
+
     def get_player_name(self):
         name = ""
         while True:
@@ -72,7 +53,6 @@ class Game:
     def reset_ball_and_paddle(self):
         self.ball = Ball(self.ball.speed_x, self.ball.speed_y) 
         self.paddle = Paddle(self.paddle.rect.width) 
-
 
     def run(self):
         self.player_name = self.get_player_name()
@@ -156,7 +136,7 @@ class Game:
         self.screen.screen.blit(player_text, player_rect)
         self.screen.draw_text("Press R to play again or Q to quit", (SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50))
         pygame.display.flip()
-        self.save_user_data()
+        admin.save_user_data(self.player_name, self.score, self.level)  # 사용자 데이터 저장
         self.wait_for_key()
 
     def wait_for_key(self):
@@ -174,7 +154,6 @@ class Game:
                     elif event.key == pygame.K_q:
                         waiting = False
                         self.running = False
-
 
     def restart_game(self):
         self.level = 1 
