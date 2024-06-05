@@ -26,4 +26,6 @@ def get_top_scores():
     c.execute("SELECT name, score FROM users ORDER BY score DESC LIMIT 3")
     top_scores = c.fetchall()
     conn.close()
+    if not top_scores:
+        return[("플레이어 데이터가 존재하지 않습니다.", 0)]
     return top_scores
