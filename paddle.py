@@ -1,6 +1,3 @@
-# 플레이어가 조종하는 패들
-# 위치(x좌표)
-
 import pygame
 from screen import SCREEN_WIDTH, SCREEN_HEIGHT
 
