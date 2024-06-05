@@ -146,7 +146,8 @@ class Game:
 
     def restart_game(self):
         self.level = Level()
-        self.score = 0  
+        self.score = 0
+        self.lives = 3
         self.running = True
-        self.level.bricks = Brick.initialize_bricks(self.level.level)
-        self.reset_ball_and_paddle() 
+        self.level.initialize_bricks()
+        self.reset_ball_and_paddle()

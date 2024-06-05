@@ -27,8 +27,3 @@ class Brick:
         if self.durability > 0:
             pygame.draw.rect(screen, BLUE, self.rect)
             screen.blit(self.text_surface, self.text_rect)
-    
-    def initialize_bricks(level):
-        brick_count = level 
-        brick_positions = [(random.randint(0, 9) * (60 + 10) + 35, random.randint(0, 9) * (20 + 10) + 35) for _ in range(brick_count)]
-        return [Brick(x, y, level) for x, y in brick_positions]
