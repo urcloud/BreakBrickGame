@@ -1,6 +1,7 @@
 import pygame
 import sys
 from admin import get_top_scores
+import admin
 from game import Game
 
 class MainMenu:
@@ -9,6 +10,7 @@ class MainMenu:
         self.screen = pygame.display.set_mode((800, 600))
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 36)
+        admin.create_table()
 
     def show_menu(self):
         while True:

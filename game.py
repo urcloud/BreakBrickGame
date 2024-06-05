@@ -21,7 +21,6 @@ class Game:
         self.score = 0
         self.lives = 3
         self.player_name = None
-        admin.create_table()
 
     def get_player_name(self):
         name = ""
@@ -149,5 +148,5 @@ class Game:
         self.level = Level()
         self.score = 0  
         self.running = True
-        self.level.bricks = Brick.initialize_bricks(self.level.level)  # 벽돌 초기화
+        self.level.bricks = Brick.initialize_bricks(self.level.level)
         self.reset_ball_and_paddle() 
