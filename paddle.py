@@ -16,6 +16,3 @@ class Paddle:
 
     def draw(self, screen):
         pygame.draw.rect(screen, WHITE, self.rect)
-        
-    def shorten(self):
-        self.rect.width = max(30, self.rect.width - 10)

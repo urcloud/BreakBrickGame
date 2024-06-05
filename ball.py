@@ -21,7 +21,3 @@ class Ball:
 
     def draw(self, screen):
         pygame.draw.ellipse(screen, RED, self.rect)
-    
-    def increase_speed(self):
-        self.speed_x *= 1.1
-        self.speed_y *= 1.1

@@ -42,9 +42,16 @@ class Game:
             pygame.display.flip()
             self.clock.tick(30)
 
+    def initialize_ball_and_paddle(self):
+        self.ball = Ball()
+        self.paddle = Paddle() 
+        
     def reset_ball_and_paddle(self):
-        self.ball = Ball(self.ball.speed_x, self.ball.speed_y) 
-        self.paddle = Paddle(self.paddle.rect.width) 
+        ball_speed_x = self.ball.speed_x
+        ball_speed_y = self.ball.speed_y
+        paddle_width = self.paddle.rect.width
+        self.ball = Ball(ball_speed_x, ball_speed_y)
+        self.paddle = Paddle(paddle_width)
 
     def run(self):
         self.player_name = self.get_player_name()
@@ -88,8 +95,8 @@ class Game:
                     self.running = False
 
             if not self.level.bricks:
-                self.level.level_up(self.ball, self.paddle) 
-                self.reset_ball_and_paddle() 
+                self.level.level_up(self.ball, self.paddle)
+                self.reset_ball_and_paddle()
                 self.wait_for_level_up()
                 
     def wait_for_level_up(self):
@@ -149,5 +156,5 @@ class Game:
         self.score = 0
         self.lives = 3
         self.running = True
-        self.level.initialize_bricks()
-        self.reset_ball_and_paddle()
+        self.level.bricks = Brick.initialize_bricks(self.level.level)
+        self.initialize_ball_and_paddle()
