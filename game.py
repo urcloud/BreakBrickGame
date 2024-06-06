@@ -43,11 +43,13 @@ class Game:
             pygame.display.flip()
             self.clock.tick(30)
         
-    def reset_ball_and_paddle(self):
+    def initialize_ball(self):
         ball_speed_x = self.ball.speed_x
         ball_speed_y = self.ball.speed_y
-        paddle_width = self.paddle.rect.width
         self.ball = Ball(ball_speed_x, ball_speed_y)
+
+    def initialize_paddle(self):
+        paddle_width = self.paddle.rect.width
         self.paddle = Paddle(paddle_width)
 
     def run(self):
@@ -87,13 +89,15 @@ class Game:
             if self.ball.rect.bottom >= SCREEN_HEIGHT:
                 self.lives -= 1
                 if self.lives > 0:
-                    self.reset_ball_and_paddle()
+                    self.initialize_ball()
+                    self.initialize_paddle()
                 else:
                     self.running = False
 
             if not self.level.bricks:
                 self.level.level_up(self.ball, self.paddle)
-                self.reset_ball_and_paddle()
+                self.initialize_ball()
+                self.initialize_paddle()
                 self.wait_for_level_up()
                 
     def wait_for_level_up(self):
