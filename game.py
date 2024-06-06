@@ -86,7 +86,7 @@ class Game:
                     self.running = False
 
             if not self.level.bricks:
-                self.level.level_up(self.ball, self.paddle)
+                self.level.level_up()
                 self.ball = Ball(self.level.level)
                 self.paddle = Paddle(self.level.level)
                 self.wait_for_level_up()
