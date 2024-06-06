@@ -21,6 +21,7 @@ class Game:
         self.score = 0
         self.lives = 3
         self.player_name = None
+        self.level.bricks = Brick.initialize_bricks(self.level.level)
 
     def get_player_name(self):
         name = ""
@@ -41,10 +42,6 @@ class Game:
             self.screen.draw_text(name, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
             pygame.display.flip()
             self.clock.tick(30)
-
-    def initialize_ball_and_paddle(self):
-        self.ball = Ball()
-        self.paddle = Paddle() 
         
     def reset_ball_and_paddle(self):
         ball_speed_x = self.ball.speed_x
@@ -157,4 +154,5 @@ class Game:
         self.lives = 3
         self.running = True
         self.level.bricks = Brick.initialize_bricks(self.level.level)
-        self.initialize_ball_and_paddle()
+        self.ball = Ball()
+        self.paddle = Paddle()
