@@ -4,7 +4,8 @@ from screen import SCREEN_WIDTH, SCREEN_HEIGHT
 WHITE = (255, 255, 255)
 
 class Paddle:
-    def __init__(self, width=100):
+    def __init__(self, level):
+        width = 100 - 10 * (level - 1)
         self.rect = pygame.Rect(SCREEN_WIDTH // 2 - width // 2, SCREEN_HEIGHT - 30, width, 10)
         self.speed = 6
 

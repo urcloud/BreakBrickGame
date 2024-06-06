@@ -14,8 +14,8 @@ class Game:
         self.screen = Screen()
         self.clock = pygame.time.Clock()
         self.level = Level()
-        self.ball = Ball()
-        self.paddle = Paddle()
+        self.ball = Ball(self.level.level)
+        self.paddle = Paddle(self.level.level)
         self.running = False
         self.paused = False
         self.score = 0
@@ -42,15 +42,6 @@ class Game:
             self.screen.draw_text(name, (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
             pygame.display.flip()
             self.clock.tick(30)
-        
-    def initialize_ball(self):
-        ball_speed_x = self.ball.speed_x
-        ball_speed_y = self.ball.speed_y
-        self.ball = Ball(ball_speed_x, ball_speed_y)
-
-    def initialize_paddle(self):
-        paddle_width = self.paddle.rect.width
-        self.paddle = Paddle(paddle_width)
 
     def run(self):
         self.player_name = self.get_player_name()
@@ -89,15 +80,15 @@ class Game:
             if self.ball.rect.bottom >= SCREEN_HEIGHT:
                 self.lives -= 1
                 if self.lives > 0:
-                    self.initialize_ball()
-                    self.initialize_paddle()
+                    self.ball = Ball(self.level.level)
+                    self.paddle = Paddle(self.level.level)
                 else:
                     self.running = False
 
             if not self.level.bricks:
                 self.level.level_up(self.ball, self.paddle)
-                self.initialize_ball()
-                self.initialize_paddle()
+                self.ball = Ball(self.level.level)
+                self.paddle = Paddle(self.level.level)
                 self.wait_for_level_up()
                 
     def wait_for_level_up(self):
@@ -158,5 +149,5 @@ class Game:
         self.lives = 3
         self.running = True
         self.level.bricks = Brick.initialize_bricks(self.level.level)
-        self.ball = Ball()
-        self.paddle = Paddle()
+        self.ball = Ball(self.level.level)
+        self.paddle = Paddle(self.level.level)
